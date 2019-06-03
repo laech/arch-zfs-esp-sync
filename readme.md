@@ -1,4 +1,3 @@
-
 # arch-zfs-esp-sync
 
 For UEFI Arch Linux systems that don't mount the ESP on /boot and wanting to
@@ -48,8 +47,8 @@ Example files generated using above config:
 
 ```
 <esp>
+- startup.nsh
 - EFI
-  - startup.nsh
   - arch
   
     - vmlinuz-linux.efi
