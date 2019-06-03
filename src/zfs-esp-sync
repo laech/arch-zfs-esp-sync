@@ -20,7 +20,7 @@ fi
 #   - /boot/initramfs-${target}-fallback.img
 #
 # The last entries will be the default to be started by the root
-# <esp>/startup.sh file.
+# <esp>/startup.nsh file.
 #
 # readonly targets=(linux linux-lts)
 readonly targets=(${targets[@]:?"targets undefined"})
