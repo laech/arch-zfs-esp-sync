@@ -10,12 +10,17 @@ set -o pipefail
 # The files will be searched are:
 #   - /boot/vmlinuz-${target}
 #   - /boot/initramfs-${target}.img
-#   - /boot/initramfs--${target}-fallback.img
+#   - /boot/initramfs-${target}-fallback.img
 #
 # The last entries will be the default to be started by the root
 # <esp>/startup.sh file.
 #
 readonly targets=(linux linux-lts)
+
+#
+# The partition number of the ESP parition - 1.
+#
+readonly esp_partnum=0
 
 #
 # Where the ESP is mounted.
@@ -56,7 +61,8 @@ gen_nsh() {
     fi
 
     echo "-> ${nsh}"
-    echo "${target_dir_on_esp}\\${vmlinuz} zfs=bootfs rw ${initrd}" > "${nsh}"
+    echo "fs$esp_partnum:" > "${nsh}"
+    echo "${target_dir_on_esp}\\${vmlinuz}.efi zfs=bootfs rw ${initrd}" >> "${nsh}"
 }
 
 
@@ -78,6 +84,8 @@ process() {
 	   "/boot/${initramfs}" \
 	   "/boot/${initramfs_fallback}" \
 	   "${target_dir}"
+
+        mv -v "/boot/${vmlinuz}" "/boot/${vmlinuz}.efi"
 
 	gen_nsh "${vmlinuz}" "${initramfs}"          "${startnsh}"
 	gen_nsh "${vmlinuz}" "${initramfs_fallback}" "${startnsh_fallback}"
