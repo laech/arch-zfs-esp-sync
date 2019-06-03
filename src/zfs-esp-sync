@@ -4,6 +4,13 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
+if [[ ! -f /etc/zfs-esp-sync ]]; then
+    echo "/etc/zfs-esp-sync does not exists, skipping"
+    exit 0
+fi
+
+. /etc/zfs-esp-sync
+
 #
 # List of targets, usually the name of the package.
 #
@@ -15,17 +22,21 @@ set -o pipefail
 # The last entries will be the default to be started by the root
 # <esp>/startup.sh file.
 #
-readonly targets=(linux linux-lts)
+# readonly targets=(linux linux-lts)
+readonly targets=(${targets[@]:?"targets undefined"})
 
 #
-# The partition number of the ESP parition - 1.
+# Where is the ESP? One of the 'FS' entries return by the 'map'
+# command ran inside an UEFI shell. Usuall fs0
 #
-readonly esp_partnum=0
+# readonly esp_fs=fs0
+readonly esp_fs=${esp_fs:?"esp_fs undefined"}
 
 #
 # Where the ESP is mounted.
 #
-readonly esp_mount="/boot/efi"
+# readonly esp_mount="/boot/efi"
+readonly esp_mount=${esp_mount:?"esp_mount undefined"}
 
 #
 # The target directory to copy the files to.
@@ -45,10 +56,6 @@ readonly target_dir_on_esp="\\EFI\\arch"
 #
 readonly intel_ucode_name="intel-ucode.img"
 readonly intel_ucode_path="/boot/${intel_ucode_name}"
-readonly intel_ucode_present=$([[ -e "${intel_ucode_path}" ]] \
-				   && echo "true" \
-				   || echo "false")
-
 
 gen_nsh() {
     local vmlinuz="$1"
@@ -56,12 +63,12 @@ gen_nsh() {
     local nsh="${target_dir}/$3"
     local initrd="initrd=${target_dir_on_esp}\\${initramfs}"
 
-    if [[ "${intel_ucode_present}" == "true" ]]; then
+    if [[ -e "${intel_ucode_path}" ]]; then
 	initrd="initrd=${target_dir_on_esp}\\intel-ucode.img ${initrd}"
     fi
 
     echo "-> ${nsh}"
-    echo "fs$esp_partnum:" > "${nsh}"
+    echo "$esp_fs:" > "${nsh}"
     echo "${target_dir_on_esp}\\${vmlinuz}.efi zfs=bootfs rw ${initrd}" >> "${nsh}"
 }
 
@@ -78,6 +85,7 @@ process() {
     local startnsh_fallback="start-${target}-fallback.nsh"
 
     if [[ -e "/boot/${vmlinuz}" ]]; then
+        echo "/boot/${vmlinuz} exists, copying its files..."
 
         cp -afv \
 	   "/boot/${vmlinuz}" \
@@ -85,13 +93,16 @@ process() {
 	   "/boot/${initramfs_fallback}" \
 	   "${target_dir}"
 
-        mv -v "/boot/${vmlinuz}" "/boot/${vmlinuz}.efi"
+        mv -v "${target_dir}/${vmlinuz}" "${target_dir}/${vmlinuz}.efi"
 
 	gen_nsh "${vmlinuz}" "${initramfs}"          "${startnsh}"
 	gen_nsh "${vmlinuz}" "${initramfs_fallback}" "${startnsh_fallback}"
 
+        echo "-> ${esp_mount}/startup.nsh"
+        echo "${target_dir_on_esp}\\${startnsh}" > "${esp_mount}/startup.nsh"
+
     else
-	echo "Removing..."
+	echo "/boot/${vmlinuz} does not exist, removing its files..."
 	rm -fv \
 	   "${target_dir}/${vmlinuz}" \
 	   "${target_dir}/${initramfs}" \
@@ -99,17 +110,14 @@ process() {
 	   "${target_dir}/${startnsh}" \
 	   "${target_dir}/${startnsh_fallback}"
     fi
-
-    echo "-> ${esp_mount}/startup.nsh"
-    echo "${target_dir_on_esp}\\${startnsh}" > "${esp_mount}/startup.nsh"
 }
 
 
 process_intel_ucode() {
-    if [[ "${intel_ucode_present}" == "true" ]]; then
+    if [[ -e "${intel_ucode_path}" ]]; then
 	cp -afv "${intel_ucode_path}" "${target_dir}"
     else
-	echo "Removing ${intel_ucode_name}"
+	echo "${intel_ucode_path} does not exist, removing its files..."
 	rm -fv "${target_dir}/${intel_ucode_name}"
     fi
 }
