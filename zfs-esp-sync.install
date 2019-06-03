@@ -1,0 +1,8 @@
+
+post_install() {
+  /usr/share/libalpm/scripts/zfs-esp-sync
+}
+
+post_upgrade() {
+  /usr/share/libalpm/scripts/zfs-esp-sync
+}
