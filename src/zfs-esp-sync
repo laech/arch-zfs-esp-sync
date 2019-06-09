@@ -99,6 +99,7 @@ process() {
 	gen_nsh "${vmlinuz}" "${initramfs_fallback}" "${startnsh_fallback}"
 
         echo "-> ${esp_mount}/startup.nsh"
+        echo "$esp_fs:" > "${esp_mount}/startup.nsh"
         echo "${target_dir_on_esp}\\${startnsh}" > "${esp_mount}/startup.nsh"
 
     else
