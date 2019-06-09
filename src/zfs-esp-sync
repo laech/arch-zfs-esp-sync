@@ -100,7 +100,7 @@ process() {
 
         echo "-> ${esp_mount}/startup.nsh"
         echo "$esp_fs:" > "${esp_mount}/startup.nsh"
-        echo "${target_dir_on_esp}\\${startnsh}" > "${esp_mount}/startup.nsh"
+        echo "${target_dir_on_esp}\\${startnsh}" >> "${esp_mount}/startup.nsh"
 
     else
 	echo "/boot/${vmlinuz} does not exist, removing its files..."
