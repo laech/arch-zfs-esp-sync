@@ -105,7 +105,7 @@ process() {
     else
 	echo "/boot/${vmlinuz} does not exist, removing its files..."
 	rm -fv \
-	   "${target_dir}/${vmlinuz}" \
+	   "${target_dir}/${vmlinuz}.efi" \
 	   "${target_dir}/${initramfs}" \
 	   "${target_dir}/${initramfs_fallback}" \
 	   "${target_dir}/${startnsh}" \
