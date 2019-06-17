@@ -1,0 +1,5 @@
+[Unit]
+Description=Sync ZFS ESP
+
+[Service]
+ExecStart=/usr/bin/zfs-esp-sync "%i"

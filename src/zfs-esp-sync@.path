@@ -1,0 +1,6 @@
+[Unit]
+Description=Sync ZFS ESP
+
+[Path]
+PathChanged=/boot/initramfs-%i.img
+PathChanged=/boot/initramfs-%i-fallback.img

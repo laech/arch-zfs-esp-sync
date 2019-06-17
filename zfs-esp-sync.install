@@ -1,8 +1,11 @@
 
 post_install() {
-  /usr/share/libalpm/scripts/zfs-esp-sync
+  systemctl daemon-reload
 }
 
 post_upgrade() {
-  /usr/share/libalpm/scripts/zfs-esp-sync
+  # Remove files from previous versions
+  rm -rvf \
+     /usr/share/libalpm/scripts/zfs-esp-sync \
+     /usr/share/libalpm/hooks/95-zfs-esp-sync.hook
 }
