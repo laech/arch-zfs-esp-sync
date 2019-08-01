@@ -1,5 +1,5 @@
 pkgname=zfs-esp-sync
-pkgver=0.3
+pkgver=0.3.1
 pkgrel=1
 arch=('any')
 install=${pkgname}.install
