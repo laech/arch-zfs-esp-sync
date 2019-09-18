@@ -7,3 +7,4 @@ WantedBy=basic.target
 [Path]
 PathChanged=/boot/initramfs-%i.img
 PathChanged=/boot/initramfs-%i-fallback.img
+PathChanged=/boot/intel-ucode.img
