@@ -1,5 +1,8 @@
 [Unit]
 Description=Sync ZFS ESP
 
+[Install]
+WantedBy=basic.target
+
 [Service]
 ExecStart=/usr/bin/zfs-esp-sync-watch "%i"
