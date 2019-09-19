@@ -25,15 +25,15 @@ pacman -U *.pkg.tar.xz
 ## Configuration
 
 To monitor kernel image files for specific kernel packages, enable and
-start the corresponding `zfs-esp-sync@.path`, for example, to monitor
+start the corresponding `zfs-esp-sync@.service`, for example, to monitor
 both the `linux` and `linux-lts` packages:
 
 ```bash
-systemctl enable zfs-esp-sync@linux.path
-systemctl start zfs-esp-sync@linux.path
+systemctl enable zfs-esp-sync@linux.service
+systemctl start zfs-esp-sync@linux.service
 
-systemctl enable zfs-esp-sync@linux-lts.path
-systemctl start zfs-esp-sync@linux-lts.path
+systemctl enable zfs-esp-sync@linux-lts.service
+systemctl start zfs-esp-sync@linux-lts.service
 ```
 
 This assume each package creates the following files:

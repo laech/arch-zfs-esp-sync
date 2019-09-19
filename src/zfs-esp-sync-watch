@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+set -o errexit
+set -o nounset
+set -o pipefail
+
+readonly target=${1:?"usage: $0 <target>"}
+
+while true; do
+    inotifywait -e close_write "/boot"
+    zfs-esp-sync "$target"
+done
