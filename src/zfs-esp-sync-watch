@@ -7,6 +7,14 @@ set -o pipefail
 readonly target=${1:?"usage: $0 <target>"}
 
 while true; do
-    inotifywait -e close_write "/boot"
-    zfs-esp-sync "$target"
+    inotifywait -e close_write -m --format '%f' /boot | \
+        while read file; do
+            if [[ "${file}" == "intel-ucode.img" ]] ||
+                   [[ "${file}" == "initramfs-${target}.img" ]] ||
+                   [[ "${file}" == "initramfs-${target}-fallback.img" ]] ||
+                   [[ "${file}" == "vmlinuz-${target}" ]]; then
+                echo "${file} changed"
+                zfs-esp-sync "${target}"
+            fi
+        done
 done
