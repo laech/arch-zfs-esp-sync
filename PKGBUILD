@@ -1,5 +1,5 @@
 pkgname=zfs-esp-sync
-pkgver=0.4.8
+pkgver=0.5
 pkgrel=1
 arch=('any')
 depends=(inotify-tools)

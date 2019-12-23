@@ -70,6 +70,12 @@ esp_fs=fs0
 # Where the ESP is mounted.
 #
 esp_mount=/boot/efi
+
+#
+# Additional kernel parameters.
+#
+extra_kernel_params="apparmor=1 security=apparmor"
+
 ```
 
 Example files generated using above config:
