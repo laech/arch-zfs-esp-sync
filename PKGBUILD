@@ -8,11 +8,11 @@ install=${pkgname}.install
 package() {
 
   install -D -m 644 -t \
-      "${pkgdir}/usr/lib/systemd/system" \
-      "${srcdir}/zfs-esp-sync@.service"
+    "${pkgdir}/usr/lib/systemd/system" \
+    "${srcdir}/zfs-esp-sync@.service"
 
   install -D -m 755 -t \
-      "${pkgdir}/usr/bin" \
-      "${srcdir}/zfs-esp-sync" \
-      "${srcdir}/zfs-esp-sync-watch"
+    "${pkgdir}/usr/bin" \
+    "${srcdir}/zfs-esp-sync" \
+    "${srcdir}/zfs-esp-sync-watch"
 }
