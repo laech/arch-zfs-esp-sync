@@ -62,6 +62,11 @@ readonly intel_ucode_path="/boot/${intel_ucode_name}"
 #
 readonly extra_kernel_params=${extra_kernel_params:-""}
 
+#
+# Additional UEFI commands to execute before booting.
+#
+readonly extra_uefi_cmds=${extra_uefi_cmds:-""}
+
 gen_nsh() {
   local vmlinuz="$1"
   local initramfs="$2"
@@ -108,8 +113,11 @@ process() {
     if [[ "${target}" == "${default}" ]]; then
       echo "Making ${target} the default boot target..."
       echo "-> ${esp_mount}/startup.nsh"
-      echo "$esp_fs:" >"${esp_mount}/startup.nsh"
-      echo "${target_dir_on_esp}\\${startnsh}" >>"${esp_mount}/startup.nsh"
+      echo "
+${extra_uefi_cmds}
+${esp_fs}:
+${target_dir_on_esp}\\${startnsh}
+" >"${esp_mount}/startup.nsh"
     fi
 
   elif [[ ! -e "/boot/${vmlinuz}" ]]; then

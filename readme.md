@@ -76,6 +76,10 @@ esp_mount=/boot/efi
 #
 extra_kernel_params="apparmor=1 security=apparmor"
 
+#
+# Additional UEFI commands to execute before booting.
+#
+extra_uefi_cmds=""
 ```
 
 Example files generated using above config:

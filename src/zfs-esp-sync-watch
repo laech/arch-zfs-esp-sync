@@ -8,7 +8,7 @@ readonly target=${1:?"usage: $0 <target>"}
 
 while true; do
   inotifywait -e close_write -m --format '%f' /boot |
-    while read file; do
+    while read -r file; do
       if [[ "${file}" == "intel-ucode.img" ]] ||
         [[ "${file}" == "initramfs-${target}.img" ]] ||
         [[ "${file}" == "initramfs-${target}-fallback.img" ]] ||
